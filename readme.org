@@ -29,7 +29,7 @@
   Using the function below you will get an alist with the top templates description and id's
 
   #+BEGIN_SRC emacs-lisp
-  (imgflip-get-top-templates()
+  (imgflip-get-top-templates)
   #+END_SRC
 
   
