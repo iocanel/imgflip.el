@@ -57,4 +57,18 @@
    - The top text (text0)
    - The bottom text (text1)
      
-   And expands to an org link to the downloaded image.
+   And expands to an org link to the downloaded image. Once the expansion is complete, the linked image will also be displayed.
+
+   For example:
+   
+   `imgflip` with the following fields:
+   - Morpheus
+   - What if I told you?
+   - that once your press tab the meme will be added to your buffer?
+     
+     will expand to:
+   #+BEGIN_SRC org
+     #+CAPTION: Morpheus - What if i told you / that once you press tab the meme will be added to your buffer?
+     [[~/Downloads/imgflip/Morpheus-What-if-i-told-you-that-once-you-press-tab-the-meme-will-be-added-to-your-buffer?.jpg]]
+   #+END_SRC
+
