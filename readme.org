@@ -3,6 +3,13 @@
   #+CAPTION: Drake - I always hated memes / until I started generating them inside Emacs
   [[./meme.jpg]]
 
+
+  
+** Features
+
+   - Elisp client for [[https://imgflip.com][imgflip]]
+   - Snippets for org-mode that allow users to easily embed memes in their org files.
+   
 ** Installation
    
    This plugin is not currently available on any repository, so the simplest way to install is via [[https://github.com/raxod502/straight.el][straight.el]].
