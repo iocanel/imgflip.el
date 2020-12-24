@@ -1,0 +1,50 @@
+* Imgflip API client for Emacs Lisp
+
+** Installation
+   
+   This plugin is not currently available on any repository, so the simplest way to install is via [[https://github.com/raxod502/straight.el][straight.el]].
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package imgflip.el :straight (imgflip.el :host github :repo "iocanel/imgflip.el")
+      :custom (imgflip-download-dir "~/.imgflip" "Where my images will be downloaded"`)
+      :config
+      (setq imgflip-username "< your username >"
+            imgflip-passowrd "< your password >"))
+  #+END_SRC
+
+** Using
+
+*** Getting the top templates
+
+  Using the function below you will get an alist with the top templates description and id's
+
+  #+BEGIN_SRC emacs-lisp
+  (imgflip-get-top-templates()
+  #+END_SRC
+
+  
+*** Create and downalod an image
+**** With a template id
+   #+BEGIN_SRC emacs-lisp
+     (imgflip-download-caption-image "<template id>" "<Top text (text0)>" "<Bottom text (text1)>")
+   #+END_SRC
+
+**** Without a template id
+
+     To make it easier, the function can work without a template id, by passing a `template query string`.
+     This will only work for templates in the `Top 100` list. Matching of the quesry string is done based on the most common words between the string and the template description.
+     
+   #+BEGIN_SRC emacs-lisp
+     (imgflip-download-caption-image "Morpheus" "What if I told you..." "that it works even without a template id?")
+   #+END_SRC
+    
+
+** Snippet
+
+   An `imgflip` snippet is also provided for `org-mode` that gets as field values:
+   
+   - The template id or query string
+   - The top text (text0)
+   - The bottom text (text1)
+     
+   And expands to an org link to the downloaded image.

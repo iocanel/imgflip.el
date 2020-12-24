@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: imgflip
+# key: imgflip 
+# --
+
+#+TEMPLATE: ${1:Meme type (e.g. Matrix Morpheus)}
+#+TOP-TEXT ${2: Top text}
+#+BOTTOM-TEXT ${3: Bottom text}
+#+CAPTION: $1 - $2 $3
+[[$(imgflip-download-caption-image $1 $2 $3)]]
