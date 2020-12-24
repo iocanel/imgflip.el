@@ -85,7 +85,7 @@
   (let ((filename (concat imgflip-download-dir (format "%s-%s-%s.jpg" template-id
                                                      (replace-regexp-in-string "[ ]" "-" top-text) 
                                                      (replace-regexp-in-string "[ ]" "-" bottom-text)))))
-    (url-copy-file (imgflip-caption-image template-id top-text bottom-text) filename)
+    (url-copy-file (imgflip-caption-image template-id top-text bottom-text) filename t)
     filename))
 
 ;;
