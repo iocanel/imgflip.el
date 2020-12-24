@@ -1,5 +1,8 @@
 * Imgflip API client for Emacs Lisp
 
+  #+CAPTION: Drake - I always hated memes / until I started generating them inside Emacs
+  [[./meme.jpg]]
+
 ** Installation
    
    This plugin is not currently available on any repository, so the simplest way to install is via [[https://github.com/raxod502/straight.el][straight.el]].
