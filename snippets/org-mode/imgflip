@@ -1,10 +1,7 @@
 # -*- mode: snippet -*-
 # name: imgflip
 # key: imgflip 
+# expand-env: ((yas-after-exit-snippet-hook #'org-display-inline-images))
 # --
-
-#+TEMPLATE: ${1:Meme type (e.g. Matrix Morpheus)}
-#+TOP-TEXT ${2: Top text}
-#+BOTTOM-TEXT ${3: Bottom text}
-#+CAPTION: $1 - $2 $3
-[[$(imgflip-download-caption-image $1 $2 $3)]]
+#+CAPTION: ${1:Morpheus} - ${2:What if i told you} / ${3:that you can now generated memes in org-mode?}
+[[${4:$$(imgflip-download-caption-image (yas-field-value 1) (yas-field-value 2) (yas-field-value 3))}]]
