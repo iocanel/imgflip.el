@@ -82,7 +82,8 @@
 
 (defun imgflip-download-caption-image (template-id top-text &optional bottom-text)
   "Create a caption and download the image using the specified TEMPLATE-ID, TOP-TEXT optionally BOTTOM-TEXT to create a meme. Reutrn the path to the image."
-  (let ((filename (concat imgflip-download-dir (format "%s-%s-%s.jpg" template-id
+  (when (not (file-exists-p imgflip-download-dir)) (make-directory imgflip-download-dir t))
+  (let ((filename (concat (file-name-as-directory imgflip-download-dir) (format "%s-%s-%s.jpg" template-id
                                                      (replace-regexp-in-string "[ ]" "-" top-text) 
                                                      (replace-regexp-in-string "[ ]" "-" bottom-text)))))
     (url-copy-file (imgflip-caption-image template-id top-text bottom-text) filename t)
