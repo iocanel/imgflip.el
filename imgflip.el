@@ -132,4 +132,5 @@
     (length (seq-intersection words1 words2))))
 
 
+(provide 'imgflip.el)
 ;;; imgflip.el ends here
