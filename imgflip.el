@@ -47,13 +47,19 @@
   :group 'imgflip)
 
 (defun imgflip-get-top-templates ()
-  (let ((result ()))
+  (let ((result ())
+        (retries 3))  ;; Adding a retry count
+    (while (and (not result) (> retries 0))
     (request "https://imgflip.com/popular_meme_ids"
       :type "GET"
       :sync t
       :parser 'buffer-string
       :success (cl-function (lambda (&key data &allow-other-keys) (setq result (imgflip--scrap-template-alist data))))
-      :error (cl-function (lambda (&rest args &key error-thrown &allow-other-keys) (message "Got error: %S" error-thrown))))
+      :error (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
+                            (message "Error retrieving templates: %S" error-thrown)
+                            (setq retries (1- retries)))))
+    (unless result
+      (message "Retrying...")))
     result))
 
 (defun imgflip-caption-image (template-or-string top-text &optional bottom-text)
