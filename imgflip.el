@@ -65,28 +65,35 @@
   "Create a caption using the specified TEMPLATE-OR-STRING, TOP-TEXT optionally BOTTOM-TEXT to create a meme. Reutrn the image url."
   (let ((post-data `(("template_id" . ,(imgflip--to-template template-or-string))
                 ("username" . ,imgflip-username)
-                ("password" . ,imgflip-password)))
-        (url nil))
+                ("password" . ,imgflip-password))))
     (when top-text
       (setq post-data (add-to-list 'post-data `("text0" . ,top-text))))
 
     (when bottom-text
       (setq post-data (add-to-list 'post-data `("text1" . ,bottom-text))))
 
-    (request "https://api.imgflip.com/caption_image"
-      :type "POST"
-      :headers '(("Content-Type" . "application/json"))
-      :sync t
-      :params post-data
-      :data (json-encode post-data)
-      :parser 'json-read
-      :success (cl-function (lambda (&key data &allow-other-keys)
+
+    (let ((retries 3)
+          (non-retriable nil)
+          (url nil))
+      (while (and (not non-retriable) (not url) (> retries 0))
+        (request "https://api.imgflip.com/caption_image"
+          :type "POST"
+          :headers '(("Content-Type" . "application/json"))
+          :sync t
+          :params post-data
+          :data (json-encode post-data)
+          :parser 'json-read
+          :success (cl-function (lambda (&key data &allow-other-keys)
                               (setq error-message (cdr (assoc 'error_message (assoc-default 'data data))))
                               (setq url (cdr (assoc 'url (assoc-default 'data data))))
                               (when error-message
+                                (setq non-retriable t)
                                 (message "Imageflip error: %S" error-message))))
-      :error (cl-function (lambda (&rest args &key error-thrown &allow-other-keys) (message "Got error: %S" error-thrown))))
-      url))
+          :error (cl-function (lambda (&rest args &key error-thrown &allow-other-keys) (message "Got error: %S" error-thrown))))
+      (unless url
+        (message "Retrying...")))
+      url)))
 
 (defun imgflip-download-caption-image (template-id top-text &optional bottom-text)
   "Create a caption and download the image using the specified TEMPLATE-ID, TOP-TEXT optionally BOTTOM-TEXT to create a meme. Reutrn the path to the image."
