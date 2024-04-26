@@ -34,7 +34,6 @@
 (defvar imgflip-username user-login-name "The imgflip username.")
 (defvar imgflip-password nil "The imgflip password.")
 
-
 (defcustom imgflip-font "impact" "The imgflip font."
   :type 'string
   :options '("impact" "arial")
@@ -79,20 +78,39 @@
       :headers '(("Content-Type" . "application/json"))
       :sync t
       :params post-data
-      ;:data (json-encode post-data)
+      :data (json-encode post-data)
       :parser 'json-read
       :success (cl-function (lambda (&key data &allow-other-keys)
-                              (setq url (cdr (assoc 'url (assoc-default 'data data))))))
+                              (setq error-message (cdr (assoc 'error_message (assoc-default 'data data))))
+                              (setq url (cdr (assoc 'url (assoc-default 'data data))))
+                              (when error-message
+                                (message "Imageflip error: %S" error-message))))
       :error (cl-function (lambda (&rest args &key error-thrown &allow-other-keys) (message "Got error: %S" error-thrown))))
       url))
 
 (defun imgflip-download-caption-image (template-id top-text &optional bottom-text)
   "Create a caption and download the image using the specified TEMPLATE-ID, TOP-TEXT optionally BOTTOM-TEXT to create a meme. Reutrn the path to the image."
-  (let ((filename (concat imgflip-download-dir (format "%s-%s-%s.jpg" template-id
+  (let ((filename (concat (file-name-as-directory imgflip-download-dir) (format "%s-%s-%s.jpg" template-id
                                                      (replace-regexp-in-string "[ ]" "-" top-text) 
-                                                     (replace-regexp-in-string "[ ]" "-" bottom-text)))))
-    (url-copy-file (imgflip-caption-image template-id top-text bottom-text) filename t)
+                                                     (replace-regexp-in-string "[ ]" "-" bottom-text))))
+        (url (imgflip-caption-image template-id top-text bottom-text)))
+    ;; Create dir if needed
+    (when (not (file-exists-p imgflip-download-dir))
+      (make-directory imgflip-download-dir t))
+    (url-copy-file url filename t)
     filename))
+
+;;
+;; Commands
+;;
+
+(defun imgflip-create ()
+  "Prompt users for type and caption use imageflip to create a meme that will open to a new buffer"
+  (interactive)
+  (let ((template (completing-read "Template: " (imgflip-get-top-templates) nil t))
+        (top-text (read-string "Top text: "))
+        (bottom-text (read-string "Bottom text: ")))
+    (find-file (imgflip-download-caption-image template top-text bottom-text))))
 
 ;;
 ;; Utils
